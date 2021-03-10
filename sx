@@ -1,0 +1,258 @@
+synapse x s
+
+
+
+local GameMt = getrawmetatable(game)
+local OldIndex = GameMt.__index
+local OldNameCall = GameMt.__namecall
+
+setreadonly(GameMt, false)
+
+GameMt.__index = newcclosure(function(Self, Key)
+    return OldIndex(Self, Key)
+end)
+
+GameMt.__namecall = newcclosure(function(Self, ...)
+    local NamecallMethod = getnamecallmethod()
+
+    return OldNameCall(Self, ...)
+end)
+
+setreadonly(GameMt, true)
+
+local GameMt = getrawmetatable(game)
+
+local OldIndex = GameMt.__index
+local OldNameCall = GameMt.__namecall
+
+setreadonly(GameMt, false)
+
+GameMt.__index = newcclosure(function(Self, Key)
+    return OldIndex(Self, Key)
+end)
+
+GameMt.__namecall = newcclosure(function(Self, ...)
+    local NamecallMethod = getnamecallmethod()
+
+    return OldNameCall(Self, ...)
+end)
+
+setreadonly(GameMt, true)
+
+local Env = getfenv()
+
+xpcall(function()
+    return game:_____()
+end, function()
+    for i = 0, 10 do
+        if getfenv(i) ~= Env then
+            warn("Detected metamethod tampering!")
+        end
+    end
+end)
+
+local OldErr, OldMsg = pcall(function() return game:____() end)
+
+while wait(1) do
+    local Err, Msg = pcall(function() return game:____() end)
+
+    if OldErr ~= Err or OldMsg ~= Msg then
+        warn("Detected metamethod tampering!")
+    end
+end
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local GameMt = getrawmetatable(game)
+local OldIndex = GameMt.__index
+
+setreadonly(GameMt, false)
+
+GameMt.__index = newcclosure(function(Self, Key)
+    if not checkcaller() and Self == LocalPlayer and Key == "Character" then
+        return nil
+    end
+
+    return OldIndex(Self, Key)
+end)
+
+setreadonly(GameMt, true)
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+
+if not checkcaller() and Self == LocalPlayer and Key == "Character" then
+    return nil
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameMt = getrawmetatable(game)
+local OldNameCall = GameMt.__namecall
+
+setreadonly(GameMt, false)
+
+GameMt.__namecall = newcclosure(function(Self, ...)
+    local Args = {...}
+    local NamecallMethod = getnamecallmethod()
+
+    if not checkcaller() and Self == game and NamecallMethod == "GetService" and Args[1] == "Workspace" then
+        return ReplicatedStorage
+    end
+
+    return OldNameCall(Self, ...)
+end)
+
+setreadonly(GameMt, true)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Args = {...}
+
+if not checkcaller() and Self == game and NamecallMethod == "GetService" and Args[1] == "Workspace" then
+    return ReplicatedStorage
+end
+
+print(game:GetService("Workspace"))
+
+local OldFireServer
+OldFireServer = hookfunction(Instance.new'RemoteEvent'.FireServer, newcclosure(function(Event, ...)
+    return OldFireServer(Event, ...)
+end))
+
+local OldFireServer
+
+OldFireServer = hookfunction(Instance.new'RemoteEvent'.FireServer, newcclosure(function(Event, ...)
+    return OldFireServer(Event, ...)
+end))
+
+local OldFireServer
+OldFireServer = hookfunction(Instance.new'RemoteEvent'.FireServer, newcclosure(function(Event, ...)
+    if not checkcaller() then
+        local Args = {...}
+
+        print(Event)
+        for I, V in pairs(Args) do
+            print(V)
+        end
+    end
+
+    return OldFireServer(Event, ...)
+end))
+
+-- Decompiled with the Synapse X Luau decompiler.
+
+function CreateGui()
+    local v1 = Instance.new("ScreenGui");
+    local v2 = Instance.new("Frame");
+    local v3 = Instance.new("Frame");
+    local v4 = Instance.new("TextLabel");
+    local v5 = Instance.new("TextBox");
+    local v6 = Instance.new("Frame");
+    local v7 = Instance.new("Frame");
+    local v8 = Instance.new("TextButton");
+    local v9 = Instance.new("TextLabel");
+    local v10 = Instance.new("TextLabel");
+    local v11 = Instance.new("ImageLabel");
+    local v12 = Instance.new("Frame");
+    local v13 = Instance.new("Frame");
+
+local TestVariable = "Hello, world!"
+
+local function Test()
+    print(TestVariable)
+    TestVariable = "Still - Hello, world!"
+    print(TestVariable)
+end
+
+Test()
+
+local TestVariable = "Hello, world!"
+
+local function Test()
+    print(TestVariable)
+    TestVariable = "Still - Hello, world!"
+    print(TestVariable)
+end
+
+debug.setupvalue(Test, 1, "Hello, modified world!")
+Test()
+
+local TestVariable = "Hello, world!"
+
+local function Test()
+    local function InnerFunction()
+        --2 refers to the Test function
+        debug.setupvalue(2, 1, "Hello, modified world!")
+    end
+
+    InnerFunction()
+
+    print(TestVariable)
+    TestVariable = "Still - Hello, world!"
+    print(TestVariable)
+end
+
+Test()
+
+local TestVariable = "Hello, world!"
+
+local function Test()
+    print(TestVariable)
+    TestVariable = "Still - Hello, world!"
+    print(TestVariable)
+end
+
+debug.setconstant(Test, 2, "Modified - Hello, world!")
+Test()
+
+local function Test()
+    local TestVariable = "Hello, world!"
+    local function InnerFunction()
+        --2 refers to the Test function
+        debug.setstack(2, 1, "Hello, modified world!")
+    end
+
+    InnerFunction()
+
+    print(TestVariable)
+    TestVariable = "Still - Hello, world!"
+    print(TestVariable)
+end
+
+Test()
+
+local Module = require(game:GetService("ReplicatedStorage").SomeModuleScript)
+local LegitCaller = game:GetService("Players").LocalPlayer.PlayerScripts.SomeLocalScript
+
+local Result = syn.secure_call(Module.FunctionToCall, LegitCaller, ...)
+print(Result)
+
+writefile("test.txt", "Testing!")
+
+appendfile("test.txt", "Testing!")
+
+local contents = readfile("test.txt")
+
+local valid = isfile("test.txt")
+
+local Response = syn.request({
+    Url = "https://example.com",
+    Method = "GET"
+})
+
+print(Response.Body)
+
+<void> rconsoleprint(<string> message)
+
+rconsoleprint('@@RED@@')
+rconsoleprint('this is red')
+
+<void> rconsoleinfo(<string> message)
+
+<void> rconsolewarn(<string> message)
+
+<void> rconsoleerr(<string> message)
+
+<void> rconsolename(<string> title)
+
+<void> printconsole(<string> message, <byte> red, <byte> green, <byte> blue)
+
+
